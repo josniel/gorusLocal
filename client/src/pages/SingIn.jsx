@@ -1,16 +1,17 @@
 import React from 'react';
-import { Container, Row, Col, Button, Card, Form, Image } from 'react-bootstrap'
+import { Container, Row, Col, Button, Card, Collapse, Form, Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import { useState } from 'react'
 import routes from '../helpers/routes';
 import api from '../utils/axios'
-import logo from '../assets/background.jpg'
+import circle from '../assets/circle.png'
 import bg from '../assets/bg-login.jpg'
 
 const HomePage = () => {
 
   const [ email, setEmail ] = useState(null);
   const [ password, setPassword ] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const logIn = async () => {
     const body = { email, password }
@@ -36,7 +37,7 @@ const HomePage = () => {
 const containerStyle = {
   position : "relative",
   width: "100vw",
-  height: "91vh",
+  height: "100vh",
   backgroundImage:
     `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${bg})`,
   backgroundRepeat: "no-repeat",
@@ -49,7 +50,7 @@ const containerStyle = {
       <Row fluid lg={12} className="pt-5 align-items-center" style={{height: '100%'}}>
         <Col lg={5}>
           <Row className="justify-content-center">
-            <Image src={logo} roundedCircle fluid style={{width: '300px'}}/>
+            <Image src={circle} roundedCircle fluid style={{width: '300px'}}/>
           </Row>
         </Col>
         <Col lg={7}>

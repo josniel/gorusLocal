@@ -7,7 +7,8 @@ import api from '../utils/axios'
 
 const HomePage = () => {
 
-    const [ full_name, setFullName ] = useState(null);
+  
+  const [ full_name, setFullName ] = useState(null);
     const [ email, setEmail ] = useState(null);
     const [ password, setPassword ] = useState(null);
 
@@ -58,9 +59,14 @@ const HomePage = () => {
         
     
     }
+    const containerStyle = {
+      position : "relative",
+      width: "98vw",
+      height: "100vh",
+    };
 
   return (
-    <Container>
+    <Container style={containerStyle} fluid>
       <Row className="mt-5 justify-content-md-center">
         <Col>
           <Card className="mx-auto p-3" style={{width: '50%'}}>
