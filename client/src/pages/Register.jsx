@@ -59,14 +59,9 @@ const HomePage = () => {
         
     
     }
-    const containerStyle = {
-      position : "relative",
-      width: "98vw",
-      height: "100vh",
-    };
 
   return (
-    <Container style={containerStyle} fluid>
+    <Container fluid>
       <Row className="mt-5 justify-content-md-center">
         <Col>
           <Card className="mx-auto p-3" style={{width: '50%'}}>

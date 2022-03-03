@@ -7,30 +7,58 @@ import circle from '../../assets/circle.png'
 
 const Layout = ({ children }) => {
     let location = useLocation();
-    const [width, setWidth] = useState(2);
+    const [widthL, setWidthL] = useState(3);
+    const [width, setWidth] = useState(9);
     console.log('location', location)
     return (
         <Container fluid className="p-0">
             <Row lg={12} fluid>
-                {location.pathname !== '/' ? <Col lg={width}  style={{height: '100vh'}}>
+                {location.pathname !== '/' ? <Col lg={widthL}  style={{height: '100vh'}}>
                     <div className="bg-dark" style={{height: '100vh'}}>
                     <Button
                         
                         onClick={() => {
-                            if (width === 1) {
-                                setWidth(2)
+                            if (widthL === 1) {
+                                setWidthL(3)
+                                setWidth(9)
                             } else {
-                                setWidth(1)
+                                setWidthL(1)
+                                setWidth(11)
                             }
                         }}
                     >
                         Menu
                     </Button>
-                    {width === 2 ? <Image src={circle} roundedCircle fluid style={{width: '300px'}}/> : ''}
+                    {widthL === 3 ? 
+                    <Row className="">
+                        <Col lg={12}>
+                            <Row className="justify-content-center">
+                                <div style={{width: '60%'}} className="justify-content-center">
+                                    <Image className="mx-auto" src={circle} roundedCircle fluid style={{width: '200px'}}/>
+                                    <p className="mt-3 h5 mx-auto text-white">Usuario Play</p>
+                                    <p className="mx-auto  text-white">Inicio</p>
+                                    <p className="mx-auto  text-white">Mis productos</p>
+                                    <p className="mx-auto  text-white">Lobby</p>
+                                    <p className="mx-auto  text-white">Wallet</p>
+                                    <p className="mx-auto  text-white">Cerrar Sesion</p>
+                                    <Button className="my-1" variant="danger" style={{borderRadius: '20px', width: '100%'}}>
+                                        Nuevo Producto
+                                    </Button>
+                                    <Button className="my-1" variant="danger" style={{borderRadius: '20px', width: '100%'}}>
+                                        Valor de Membresía
+                                    </Button>
+                                    <Button className="my-1" variant="danger" style={{borderRadius: '20px', width: '100%'}}>
+                                        Iniciar Live
+                                    </Button>
+                                    <p className="mx-auto mt-3  text-white">Play v0.0</p>
+                                </div>
+                            </Row>
+                        </Col>
+                    </Row> : ''}
 
                     </div>
                 </Col> : ''}
-                <Col lg={location.pathname !== '/' ? 10 : 12}>
+                <Col lg={width}>
                     {children}
                 </Col>
             </Row>

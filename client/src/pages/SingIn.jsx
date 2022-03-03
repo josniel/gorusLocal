@@ -1,6 +1,7 @@
 import React from 'react';
+import { Navbar, Nav, NavDropdown } from "react-bootstrap"
 import { Container, Row, Col, Button, Card, Collapse, Form, Image } from 'react-bootstrap'
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useState } from 'react'
 import routes from '../helpers/routes';
 import api from '../utils/axios'
@@ -70,8 +71,9 @@ const containerStyle = {
                 <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} onClick={logIn}>
                   INGRESAR
                 </Button>
-                <p className="text-white">¿Quieres generar contenido? <b>Registrate como usuario Play</b></p>
-                <p className="text-white">¿Prefieres disfrutar del contenido? <b>Registrate como usuario</b></p>
+                <p className="text-white">¿Quieres generar contenido?<Button style={{textDecoration: 'none'}} class="text-white" variant="link" as={Link}  to="/register"><b>Registrate como usuario Play</b></Button></p>
+                {/* <Button as={Link} to={routes.register}>crea una cuenta</Button> */}
+                <p className="text-white">¿Prefieres disfrutar del contenido?<Button variant="link" class="text-white" style={{textDecoration: 'none'}} as={Link} to="/register"><b>Registrate como usuario</b></Button></p>
               </Form>
             </div>
           </Row>
