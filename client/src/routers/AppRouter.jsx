@@ -4,6 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import Index from "../pages/Index";
 import Settings from "../pages/Settings";
 import Register from "../pages/Register";
+import RegisterPlay from "../pages/RegisterPlay";
+import RegisterPlayProfile from "../pages/RegisterPlay2";
 import SingIn from "../pages/SingIn";
 import PublicRoute from "./PublicRoute";
 // import roles from "../helpers/role";
@@ -17,6 +19,12 @@ export default function AppRouter () {
       </Route>
       <Route element={<PublicRoute /> }>
         <Route exact path={routes.register} element={ <Register /> } />
+      </Route>
+      <Route element={<PublicRoute /> }>
+        <Route exact path={routes.registerPlay} element={ <RegisterPlay /> } />
+      </Route>
+      <Route element={<PublicRoute /> }>
+        <Route exact path={routes.registerPlay2} element={ <RegisterPlayProfile /> } />
       </Route>
       <Route element={<PublicRoute /> }>
         <Route exact path={routes.home} element={ <Index /> } />

@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
     return (
         <Container fluid className="p-0">
             <Row lg={12} fluid>
-                {location.pathname !== '/' ? <Col lg={widthL}  style={{height: '100vh'}}>
+                {location.pathname !== '/register' && location.pathname !== '/register_play' && location.pathname !== '/register_play_profile' ? <Col lg={widthL}  style={{height: '100vh'}}>
                     <div className="bg-dark" style={{height: '100vh'}}>
                     <Button
                         

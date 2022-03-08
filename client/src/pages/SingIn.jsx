@@ -71,7 +71,7 @@ const containerStyle = {
                 <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} onClick={logIn}>
                   INGRESAR
                 </Button>
-                <p className="text-white">¿Quieres generar contenido?<Button style={{textDecoration: 'none'}} class="text-white" variant="link" as={Link}  to="/register"><b>Registrate como usuario Play</b></Button></p>
+                <p className="text-white">¿Quieres generar contenido?<Button style={{textDecoration: 'none'}} class="text-white" variant="link" as={Link}  to="/register_play"><b>Registrate como usuario Play</b></Button></p>
                 {/* <Button as={Link} to={routes.register}>crea una cuenta</Button> */}
                 <p className="text-white">¿Prefieres disfrutar del contenido?<Button variant="link" class="text-white" style={{textDecoration: 'none'}} as={Link} to="/register"><b>Registrate como usuario</b></Button></p>
               </Form>

@@ -5,7 +5,7 @@ import { useState } from 'react'
 import routes from '../helpers/routes';
 import api from '../utils/axios'
 import circle from '../assets/circle.png'
-import bg from '../assets/bg-man.jpg'
+import bg from '../assets/bg-woman.jpg'
 
 const Register = () => {
 
@@ -28,7 +28,6 @@ const Register = () => {
             }
         }).then(res => {
             if (res) {
-                logIn()
                 console.log('res :>> ', res);
             }
         });
@@ -41,24 +40,7 @@ const Register = () => {
         } */
     
     }
-    const logIn = async () => {
-        const body = { email, password }
-        await api.post('login', body).then(res => {
-            if (res) { // Se debe ejecutar una mutacion que modifique el state con sessionInfo
-                /* const client = res.TRI_SESSION_INFO.roles.find(value => value === 2)
-              if (client) {
-                this.login(res)
-                this.$router.push('/rooms')
-              }  *//* else {
-                this.login(res)
-                this.$router.push('/')
-              } */
-              console.log('res', res)
-            } else {
-              console.log('error de ususario')
-            }
-        })
-        
+    const next = async () => {
     
     }
 
@@ -79,7 +61,7 @@ const Register = () => {
         <Col lg={5}>
           <Row className="justify-content-center">
             <Image src={circle} roundedCircle fluid style={{width: '300px'}}/>
-            <p className="h1 text-white text-center">Registro usuario</p>
+            <p className="h1 text-white text-center">Registro usuario Play</p>
             <p style={{width: '70%'}} className="text-white text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam maxime, voluptas quod rem soluta ratione impedit! Assumenda esse, nemo sed nostrum libero quos quia vero officiis totam, voluptatum error incidunt!</p>
           </Row>
         </Col>
@@ -99,17 +81,7 @@ const Register = () => {
                   <Form.Label className="text-white mx-4"><b>Repita su contraseña</b></Form.Label>
                   <Form.Control style={{borderRadius: '20px'}} type="password" onChange={(evt) => setPassword(evt.target.value)}/>
                 </Form.Group>
-                <Form>
-                  <b>
-                    <Form.Check
-                      type="checkbox"
-                      id={`default-checkbox`}
-                      label="Acepto términos y condiciones de uso"
-                      className="text-white text-bold"
-                    />
-                  </b>
-                </Form>
-                <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} onClick={logIn}>
+                <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} as={Link} to="/register_play_profile">
                   <b>SIGUIENTE</b>
                 </Button>
               </Form>

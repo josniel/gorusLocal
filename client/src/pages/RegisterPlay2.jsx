@@ -5,19 +5,19 @@ import { useState } from 'react'
 import routes from '../helpers/routes';
 import api from '../utils/axios'
 import circle from '../assets/circle.png'
-import bg from '../assets/bg-man.jpg'
+import bg from '../assets/bg-woman.jpg'
 
 const Register = () => {
 
   
   const [ full_name, setFullName ] = useState(null);
     const [ email, setEmail ] = useState(null);
-    const [ password, setPassword ] = useState(null);
+    const [ description, setDescription ] = useState(null);
 
     const setUser = async () => {
 
     
-        const body = { full_name, email, password, rols: 2 }
+        const body = { full_name, email, description, rols: 2 }
 
         let formData = new FormData()
         formData.append('dat', JSON.stringify(body))
@@ -28,7 +28,6 @@ const Register = () => {
             }
         }).then(res => {
             if (res) {
-                logIn()
                 console.log('res :>> ', res);
             }
         });
@@ -41,24 +40,7 @@ const Register = () => {
         } */
     
     }
-    const logIn = async () => {
-        const body = { email, password }
-        await api.post('login', body).then(res => {
-            if (res) { // Se debe ejecutar una mutacion que modifique el state con sessionInfo
-                /* const client = res.TRI_SESSION_INFO.roles.find(value => value === 2)
-              if (client) {
-                this.login(res)
-                this.$router.push('/rooms')
-              }  *//* else {
-                this.login(res)
-                this.$router.push('/')
-              } */
-              console.log('res', res)
-            } else {
-              console.log('error de ususario')
-            }
-        })
-        
+    const next = async () => {
     
     }
 
@@ -79,7 +61,7 @@ const Register = () => {
         <Col lg={5}>
           <Row className="justify-content-center">
             <Image src={circle} roundedCircle fluid style={{width: '300px'}}/>
-            <p className="h1 text-white text-center">Registro usuario</p>
+            <p className="h1 text-white text-center">Registro usuario Play</p>
             <p style={{width: '70%'}} className="text-white text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam maxime, voluptas quod rem soluta ratione impedit! Assumenda esse, nemo sed nostrum libero quos quia vero officiis totam, voluptatum error incidunt!</p>
           </Row>
         </Col>
@@ -87,17 +69,10 @@ const Register = () => {
           <Row className="justify-content-center">
             <div style={{width: '70%'}}>
               <Form>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label className="text-white mx-4"><b>Ingresa nombre de usuario</b></Form.Label>
-                  <Form.Control style={{borderRadius: '20px'}} type="text" onChange={(evt) => setEmail(evt.target.value)}/>
-                </Form.Group>
+                <label for = "file"> Haga clic aquí para activar la carga </label> <input type = "file" id = "file" style ={{display: "none"}}/>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label className="text-white mx-4"><b>Ingresa tu contraseña</b></Form.Label>
-                  <Form.Control style={{borderRadius: '20px'}} type="password" onChange={(evt) => setPassword(evt.target.value)}/>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label className="text-white mx-4"><b>Repita su contraseña</b></Form.Label>
-                  <Form.Control style={{borderRadius: '20px'}} type="password" onChange={(evt) => setPassword(evt.target.value)}/>
+                  <Form.Label className="text-white mx-4"><b>Escribe una breve descripción de ti</b></Form.Label>
+                  <Form.Control style={{borderRadius: '20px', height: '140px'}}  as="textarea" onChange={(evt) => setDescription(evt.target.value)}/>
                 </Form.Group>
                 <Form>
                   <b>
@@ -109,7 +84,7 @@ const Register = () => {
                     />
                   </b>
                 </Form>
-                <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} onClick={logIn}>
+                <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} onClick={next}>
                   <b>SIGUIENTE</b>
                 </Button>
               </Form>
