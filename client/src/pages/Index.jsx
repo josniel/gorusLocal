@@ -2,44 +2,46 @@ import React, { useEffect } from 'react'
 import { useGlobalState, useGlobalMutation } from '../utils/container'
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap'
 import AgoraRTC from 'agora-rtc-sdk'
+import useDevices from '../utils/use-devices'
+import useRouter from '../utils/use-router'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types'
 
+Index.propTypes = {
+  name: PropTypes.string,
+  resolution: PropTypes.string,
+  cameraDevice: PropTypes.string,
+  microphoneDevice: PropTypes.string,
+  video: PropTypes.bool,
+  audio: PropTypes.bool
+}
 
+export default function Index () {
 
-const Index = () => {
+  const routerCtx = useRouter()
   const stateCtx = useGlobalState()
   const mutationCtx = useGlobalMutation()
-  const [ host, setHost ] = useState(null);
-  const [ channel, setChannel ] = useState(null);
-
-  useEffect(() => {
-    if (stateCtx.loading === true) {
-      mutationCtx.stopLoading()
-    }
-  }, [stateCtx.loading, mutationCtx])
+  const [cameraList, microphoneList] = useDevices()
+  let navigate = useNavigate();
 
   const handleClick = () => {
-    const config = { host, channel }
-    console.log('config', config)
     if (!stateCtx.config.channelName) {
       mutationCtx.toastError('You need enter the topic')
       return
     }
 
     mutationCtx.startLoading()
-    /* routerCtx.history.push({
-      pathname: `/meeting/${stateCtx.config.channelName}`
-    }) */
+    navigate(`/meeting/${stateCtx.config.channelName}`)
   }
 
   const handleChange = (evt) => {
     const { value, checked } = evt
-    console.log('value', evt, value, checked)
-    console.log('host', host)
-    /* mutationCtx.updateConfig({
+    console.log('value', evt)
+    mutationCtx.updateConfig({
       host: value === 'host'
-    }) */
+    })
   }
 
   return (
@@ -47,47 +49,138 @@ const Index = () => {
       <Row className="mt-5 justify-content-md-center">
         <Col>
           <Card className="mx-auto p-3" style={{width: '50%'}}>
-          {/* <Box
-            marginTop="114px"
-            flex="1"
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-start"
-            flexDirection="column"
-          >
-            <Link to="index/setting" className="setting-btn" />
             <span className="version">Web SDK Version: {AgoraRTC.VERSION}</span>
-            <a
-              href="https://github.com/AgoraIO/Basic-Video-Broadcasting/tree/master/OpenLive-Web"
-              className="github"
-            ></a>
-            <div className="role-container">
-              <CustomRadio
-                className={classes.radio}
-                value="host"
-                checked={stateCtx.config.host}
-                onClick={handleChange}
-              ></CustomRadio>
-              <CustomRadio
-                className={classes.radio}
-                value="audience"
-                checked={!stateCtx.config.host}
-                onClick={handleChange}
-              ></CustomRadio>
-            </div>
-            <Box
-              marginTop="92"
-              flex="1"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              flexDirection="column"
-            >
-              <FormControl className={clsx(classes.input, classes.grid)}>
-                <InputLabel htmlFor="channelName">Enter a channel name</InputLabel>
-                <Input
-                  id="channelName"
-                  name="channelName"
+            <Form>
+              <Form.Select 
+                aria-label="Resolución"
+                className="my-1"
+                value={stateCtx.config.resolution}
+                onChange={(evt) => {
+                  mutationCtx.updateConfig({
+                    resolution: evt.target.value
+                  })
+                }}
+                inputProps={{
+                  name: 'resolution',
+                  id: 'resolution'
+                }}
+              >
+                <option>Open this select menu</option>
+                <option value="480p">480p</option>
+                <option value="720p">720p</option>
+                <option value="1080p">1080p</option>
+              </Form.Select>
+              <Form.Select
+                aria-label="Codec"
+                className="my-1"
+                value={stateCtx.codec}
+                onChange={(evt) => {
+                  mutationCtx.setCodec(evt.target.value)
+                }}
+                inputProps={{
+                  name: 'codec',
+                  id: 'codec'
+                }}
+              >
+                <option>Open this select menu</option>
+                <option value="h264">h264</option>
+                <option value="vp8">vp8</option>
+              </Form.Select>
+              <Form.Select
+                aria-label="Camara"
+                className="my-1"
+                value={stateCtx.config.cameraId}
+                onChange={(evt) => {
+                  mutationCtx.updateConfig({
+                    cameraId: evt.target.value
+                  })
+                }}
+                inputProps={{
+                  name: 'camera',
+                  id: 'camera'
+                }}
+              >
+                <option>Open this select menu</option>
+                {cameraList.map((item, key) => (
+                  <option key={key} value={item.value}>{item.label}</option>
+                ))}
+              </Form.Select>
+              <Form.Select
+                aria-label="Microfono"
+                className="my-1"
+                value={stateCtx.config.microphoneId}
+                onChange={(evt) => {
+                  mutationCtx.updateConfig({
+                    microphoneId: evt.target.value
+                  })
+                }}
+                inputProps={{
+                  name: 'microphone',
+                  id: 'microphone'
+                }}
+              >
+                <option>Open this select menu</option>
+                {microphoneList.map((item, key) => (
+                  <option key={key} value={item.value}>{item.label}</option>
+                ))}
+              </Form.Select>
+              <Form.Check 
+                type="switch"
+                label="Video"
+                checked={stateCtx.muteVideo}
+                onChange={() => {
+                  mutationCtx.setVideo(!stateCtx.muteVideo)
+                }}
+                value={stateCtx.muteVideo}
+                color="primary"
+              />
+              <Form.Check 
+                type="switch"
+                label="Audio"
+                checked={stateCtx.muteAudio}
+                onChange={() => {
+                  mutationCtx.setAudio(!stateCtx.muteAudio)
+                }}
+                value={stateCtx.muteAudio}
+                color="primary"
+              />
+              <Form.Check 
+                type="switch"
+                label="Perfil"
+                checked={stateCtx.profile}
+                onChange={() => {
+                  mutationCtx.setProfile(!stateCtx.profile)
+                }}
+                value={stateCtx.profile}
+                color="primary"
+              />
+            </Form>
+            <Form>
+                <Form.Check
+                  inline
+                  label="host"
+                  value="host"
+                  name="group1"
+                  type="radio"
+                  id="inline-radio-1"
+                  checked={stateCtx.config.host}
+                  onClick={handleChange}
+                />
+                <Form.Check
+                  inline
+                  label="audience"
+                  value="audience"
+                  name="group1"
+                  type="radio"
+                  id="inline-radio-2"
+                  checked={!stateCtx.config.host}
+                  onClick={handleChange}
+                />
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Canal del live</Form.Label>
+                <Form.Control 
+                  type="text"
+                  placeholder="Nombre del Canal"
                   value={stateCtx.config.channelName}
                   onChange={(evt) => {
                     const PATTERN = /^[a-zA-Z0-9!#$%&()+\-:;<=.>?@[\]^_{}|~,\s]{1,64}$/
@@ -98,39 +191,6 @@ const Index = () => {
                       mutationCtx.updateConfig({ channelName: '' })
                     }
                   }}
-                />
-              </FormControl>
-            </Box>
-          </Box> */}
-            <span className="version">Web SDK Version: {AgoraRTC.VERSION}</span>
-            <Form>
-                <div key="inline-radio" className="mb-3">
-                  <Form.Check
-                    inline
-                    label="host"
-                    name="group1"
-                    type="radio"
-                    id="inline-radio-1"
-                    onClick={handleChange}
-                    onChange={(evt) => setHost(evt.target.value = true)}
-                  />
-                  <Form.Check
-                    inline
-                    label="audience"
-                    name="group1"
-                    type="radio"
-                    id="inline-radio-2"
-                    onClick={handleChange}
-                    onChange={(evt) => setHost(evt.target.value = false)}
-                  />
-                </div>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Canal del live</Form.Label>
-                <Form.Control 
-                  type="text"
-                  placeholder="Nombre del Canal"
-                  // value={stateCtx.config.channelName}
-                  onChange={(evt) => setChannel(evt.target.value)}
                 />
               </Form.Group>
               <Button variant="primary" onClick={handleClick}>
@@ -143,5 +203,3 @@ const Index = () => {
     </Container>
   )
 }
-
-export default Index

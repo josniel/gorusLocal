@@ -5,6 +5,7 @@ import Index from "../pages/Index";
 import Settings from "../pages/Settings";
 import Register from "../pages/Register";
 import RegisterPlay from "../pages/RegisterPlay";
+import Meeting from "../pages/Meeting";
 import RegisterPlayProfile from "../pages/RegisterPlay2";
 import SingIn from "../pages/SingIn";
 import PublicRoute from "./PublicRoute";
@@ -31,6 +32,9 @@ export default function AppRouter () {
       </Route>
       <Route element={<PublicRoute /> }>
         <Route exact path={routes.settings} element={ <Settings /> } />
+      </Route>
+      <Route element={<PublicRoute /> }>
+        <Route exact path={routes.meeting} element={ <Meeting /> } />
       </Route>
       {/* <Route element={<PublicRoute /> }>
         <Route exact path={routes.login} element={ <LoginPage /> } />

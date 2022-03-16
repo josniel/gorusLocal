@@ -4,15 +4,19 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react'
 import routes from '../helpers/routes';
 import api from '../utils/axios'
+import useRouter from '../utils/use-router'
+import { useGlobalState, useGlobalMutation } from '../utils/container'
 import circle from '../assets/circle.png'
 import bg from '../assets/bg-woman.jpg'
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-
-  
+  let navigate = useNavigate();
+  const routerCtx = useRouter()
+  const stateCtx = useGlobalState()
   const [ full_name, setFullName ] = useState(null);
-    const [ email, setEmail ] = useState(null);
-    const [ password, setPassword ] = useState(null);
+  const [ email, setEmail ] = useState(null);
+  const [ password, setPassword ] = useState(null);
 
     const setUser = async () => {
 
@@ -41,7 +45,7 @@ const Register = () => {
     
     }
     const next = async () => {
-    
+      navigate(`/register_play_profile`);
     }
 
     const containerStyle = {
@@ -81,7 +85,7 @@ const Register = () => {
                   <Form.Label className="text-white mx-4"><b>Repita su contraseña</b></Form.Label>
                   <Form.Control style={{borderRadius: '20px'}} type="password" onChange={(evt) => setPassword(evt.target.value)}/>
                 </Form.Group>
-                <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} as={Link} to="/register_play_profile">
+                <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} onClick={next}>
                   <b>SIGUIENTE</b>
                 </Button>
               </Form>

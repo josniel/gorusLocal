@@ -5,12 +5,12 @@ const routes = {
     registerPlay2: '/register_play_profile',
     home: '/home',
     settings: '/settings',
-    account: '/account',    
-    projects: '/projects',
-    project: (projectId) => projectId ? `/projects/${projectId}` : '/projects/:projectId',
-    admin: {
+    meeting: '/meeting/:channel',
+    projects: '/projects'
+    /* project: (projectId) => projectId ? `/projects/${projectId}` : '/projects/:projectId', */
+    /* admin: {
         users: '/admin/users',
-    }
+    } */
 }
 
 export default routes;

@@ -6,9 +6,9 @@ import React, {
   useEffect
 } from 'react'
 import { reducer, defaultState } from './store'
-// import CustomizedSnackbar from '../utils/snackbar-wrapper'
+import CustomizedSnackbar from '../utils/snackbar-wrapper'
 import Loading from '../utils/loading'
-import { Toast } from 'react-bootstrap'
+
 const StateContext = createContext({})
 const MutationContext = createContext({})
 
@@ -131,27 +131,9 @@ export const ContainerProvider = ({ children }) => {
   return (
     <StateContext.Provider value={state}>
       <MutationContext.Provider value={methods}>
-        {toasts.map((item, index) => (
-          <Toast
-            key={index}
-            show={true}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'center'
-            }}
-            // onClose={handleClose}
-          >
-            <Toast.Header>
-              <strong className="me-auto">{item.variant}</strong>
-              <small>11 mins ago</small>
-            </Toast.Header>
-            <Toast.Body>{item.message}</Toast.Body>
-          </Toast>
-        ))}
+        <CustomizedSnackbar toasts={toasts} />
         {state.loading ? <Loading /> : null}
         {children}
-        {/* {toasts} */}
-        {/* <CustomizedSnackbar toasts={toasts} /> */}
       </MutationContext.Provider>
     </StateContext.Provider>
   )

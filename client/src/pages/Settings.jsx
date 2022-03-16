@@ -20,17 +20,6 @@ export default function Settings () {
   const stateCtx = useGlobalState()
   const mutationCtx = useGlobalMutation()
   const [cameraList, microphoneList] = useDevices()
-  // const [ host, setHost ] = useState(null);
-  // const [ channel, setChannel ] = useState(null);
-
-  // const handleChange = (evt) => {
-  //   const { value, checked } = evt
-  //   console.log('value', evt, value, checked)
-  //   console.log('host', host)
-  //   /* mutationCtx.updateConfig({
-  //     host: value === 'host'
-  //   }) */
-  // }
 
   return (
     <Container>
@@ -38,13 +27,37 @@ export default function Settings () {
         <Col>
           <Card className="mx-auto p-3" style={{width: '50%'}}>
             <Form>
-              <Form.Select aria-label="Resolución" className="my-1">
+              <Form.Select 
+                aria-label="Resolución"
+                className="my-1"
+                value={stateCtx.config.resolution}
+                onChange={(evt) => {
+                  mutationCtx.updateConfig({
+                    resolution: evt.target.value
+                  })
+                }}
+                inputProps={{
+                  name: 'resolution',
+                  id: 'resolution'
+                }}
+              >
                 <option>Open this select menu</option>
                 <option value="480p">480p</option>
                 <option value="720p">720p</option>
                 <option value="1080p">1080p</option>
               </Form.Select>
-              <Form.Select aria-label="Codec" className="my-1">
+              <Form.Select
+                aria-label="Codec"
+                className="my-1"
+                value={stateCtx.codec}
+                onChange={(evt) => {
+                  mutationCtx.setCodec(evt.target.value)
+                }}
+                inputProps={{
+                  name: 'codec',
+                  id: 'codec'
+                }}
+              >
                 <option>Open this select menu</option>
                 <option value="h264">h264</option>
                 <option value="vp8">vp8</option>
