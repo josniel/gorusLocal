@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types'
+import api from '../utils/axios'
 
 Index.propTypes = {
   name: PropTypes.string,
@@ -25,17 +26,29 @@ export default function Index () {
   const mutationCtx = useGlobalMutation()
   const [cameraList, microphoneList] = useDevices()
   let navigate = useNavigate();
-
+  
+  useEffect(() => {
+    getData()
+  },[])
   const handleClick = () => {
     if (!stateCtx.config.channelName) {
       mutationCtx.toastError('You need enter the topic')
       return
     }
 
+    // stateCtx.config.token = getData()
+
     mutationCtx.startLoading()
     navigate(`/meeting/${stateCtx.config.channelName}`)
   }
-
+  const getData = async () => {
+    await api.get('indexChannel').then(res => {
+      if (res) {
+        console.log('res', res)
+        stateCtx.config.token = res.data.token
+      }
+    });
+  }
   const handleChange = (evt) => {
     const { value, checked } = evt
     console.log('value', evt)

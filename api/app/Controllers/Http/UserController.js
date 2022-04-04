@@ -5,10 +5,13 @@ const mkdirp = use('mkdirp')
 const fs = require('fs')
 var randomize = require('randomatic');
 const User = use("App/Models/User")
+const Channel = use("App/Models/Channel")
 const Role = use("App/Models/Role")
 const { validate } = use("Validator")
 const moment = require('moment')
 var ObjectId = require('mongodb').ObjectId;
+var {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-access-token')
+// const { RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole } = require('agora-access-token')
 
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -19,15 +22,46 @@ var ObjectId = require('mongodb').ObjectId;
  * Resourceful controller for interacting with users
  */
 class UserController {
-  /**
-   * Show a list of all users.
-   * GET users
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
+  
+  async setToken ({ request, response, }) {
+    var role = RtcRole.PUBLISHER
+    const appID  = "646f313177d140da8c072fbe80191392";
+    const appCertificate = "ae0180e0792846c28b19c39e253dba71";
+    const account = "prueba";
+    
+    const expirationTimeInSeconds = 3600
+    const currentTimestamp = Math.floor(Date.now() / 1000)
+    
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds
+    
+    const token = RtmTokenBuilder.buildToken(appID, appCertificate, account, RtmRole, privilegeExpiredTs);
+
+    
+
+    const channel = await Channel.create({ token, account })
+    
+    console.log("Rtm Token: " + token);
+    console.log("account: " + account);
+    response.send(token)
+    /* const appID  = "646f313177d140da8c072fbe80191392";
+    const appCertificate = "ae0180e0792846c28b19c39e253dba71";
+    var expirationTimeInSeconds = 3600
+    var role = RtcRole.PUBLISHER
+    var currentTimestamp = Math.floor(Date.now() / 1000)
+    var privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds
+    var channelName = "token";
+    // use 0 if uid is not specified
+    var uid = 1234
+    var token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, role, privilegeExpiredTs);
+    response.send(token) */
+  }
+
+  async indexChannel({ request, response }) {
+    let channels = (await Channel.query().where({}).fetch()).toJSON();
+    channels = channels.reverse()
+    let channel = channels[0]
+    response.send(channel);
+  }
   async index({ request, response, view }) {
     let users = await User.all();
     response.send(users);
@@ -254,6 +288,7 @@ class UserController {
     data.TRI_SESSION_INFO = token
     return data
   }
+
 
   showUser({ auth, params }) {
     if (auth.user.id !== Number(params.id)) {

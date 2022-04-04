@@ -1,9 +1,18 @@
+import api from './axios'
 const readDefaultState = () => {
   try {
     return JSON.parse(window.sessionStorage.getItem('custom_storage'))
   } catch (err) {
     return {}
   }
+}
+var token = ''
+const getData = async () => {
+  await api.get('indexChannel').then(res => {
+    if (res) {
+      return res.token
+    }
+  });
 }
 
 const defaultState = {
@@ -20,7 +29,7 @@ const defaultState = {
     uid: 0,
     host: true,
     channelName: '',
-    token: process.env.REACT_APP_AGORA_APP_TOKEN,
+    // token: process.env.REACT_APP_AGORA_APP_TOKEN,
     resolution: '480p',
     ...readDefaultState(),
     microphoneId: '',

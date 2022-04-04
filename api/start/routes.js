@@ -37,6 +37,8 @@ addPrefixToGroup(
   Route.group(() => {
     // Insertar rutas sin protección de autenticación aquí
     Route.post("login", "UserController.login");
+    Route.post("setToken", "UserController.setToken");
+    Route.get("indexChannel", "UserController.indexChannel");
     Route.post("register", "UserController.register")
     Route.get("validate_email/:email", "UserController.validateEmail")
     

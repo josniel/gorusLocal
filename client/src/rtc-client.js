@@ -1,5 +1,6 @@
 import AgoraRTC from 'agora-rtc-sdk'
 import EventEmitter from 'events'
+import api from './utils/axios'
 const appID = process.env.REACT_APP_AGORA_APP_ID
 const token = process.env.REACT_APP_AGORA_APP_TOKEN
 console.log(
@@ -21,7 +22,13 @@ export default class RTCClient {
     this._subscribed = false
     this._created = false
   }
-
+  async getData () {
+    await api.post('indexChannel').then(res => {
+        if (res) {
+            console.log('res :>> ', res);
+        }
+    });
+  }
   createClient (data) {
     this._client = AgoraRTC.createClient({
       mode: data.mode,

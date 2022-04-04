@@ -1,142 +1,122 @@
 import React from 'react'
-import useDevices from '../utils/use-devices'
-import PropTypes from 'prop-types'
 import { useGlobalState, useGlobalMutation } from '../utils/container'
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap'
+import api from '../utils/axios'
+import { useState } from 'react'
+import AgoraRTM from 'agora-rtm-sdk'
 // import AgoraRTC from 'agora-rtc-sdk'
 // import { Link } from 'react-router-dom'
-// import { useState } from 'react'
 
-Settings.propTypes = {
-  name: PropTypes.string,
-  resolution: PropTypes.string,
-  cameraDevice: PropTypes.string,
-  microphoneDevice: PropTypes.string,
-  video: PropTypes.bool,
-  audio: PropTypes.bool
+
+const Settings = () => {
+  const stateCtx = useGlobalState()
+
+  // Parameters for the login method
+ let options = {
+  token: "",
+  uid: ""
 }
 
-export default function Settings () {
-  const stateCtx = useGlobalState()
-  const mutationCtx = useGlobalMutation()
-  const [cameraList, microphoneList] = useDevices()
+// Whether to stop the token renew loop
+let stopped = false
+
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+function fetchToken(uid) {
+
+  return new Promise(function (resolve) {
+      api.post('setToken', {
+          uid: uid,
+      }, {
+          headers: {
+              'Content-Type': 'application/json; charset=UTF-8'
+          }
+      })
+          .then(function (response) {
+              const token = response.data;
+              console.log('token', token)
+              resolve(token);
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+  })
+}
+
+async function loginRTM()
+{
+
+  // Your app ID
+  const appID = "646f313177d140da8c072fbe80191392"
+
+  // Initialize the client
+  const client = AgoraRTM.createInstance(appID)
+
+  // Display connection state changes
+  client.on('ConnectionStateChanged', function (state, reason) {
+      console.log("State changed To: " + state + " Reason: " + reason)
+  })
+
+  // Set RTM user ID
+  options.uid = 'prueba'
+  // Get Token
+  options.token = await fetchToken(options.uid)
+  // Log in to RTM
+  console.log('options', options)
+  await client.login(options)
+
+  while (!stopped)
+  {
+      // Renew a token every 30 seconds for demonstration purposes.
+      // Agora recommends that you renew a token regularly, such as every hour, in production.
+      await sleep(30000)
+      options.token = await fetchToken(options.uid)
+      client.renewToken(options.token)
+
+      let currentDate = new Date();
+      let time = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+
+      console.log("Renew RTM token at " + time)
+  }
+
+}
+
+loginRTM()
+
+  const [ channel, setChannel ] = useState(null);
+
+  const setChannel_ = async () => {
+    // const body = { email, password }
+    // console.log('body :>> ', body);
+    /* await api.post('set', body).then(res => {
+        if (res) { // Se debe ejecutar una mutacion que modifique el state con sessionInfo
+        // console.log('res', res)
+        }
+    }) */
+  }  
 
   return (
     <Container>
       <Row className="mt-5 justify-content-md-center">
         <Col>
           <Card className="mx-auto p-3" style={{width: '50%'}}>
-            <Form>
-              <Form.Select 
-                aria-label="Resolución"
-                className="my-1"
-                value={stateCtx.config.resolution}
-                onChange={(evt) => {
-                  mutationCtx.updateConfig({
-                    resolution: evt.target.value
-                  })
-                }}
-                inputProps={{
-                  name: 'resolution',
-                  id: 'resolution'
-                }}
-              >
-                <option>Open this select menu</option>
-                <option value="480p">480p</option>
-                <option value="720p">720p</option>
-                <option value="1080p">1080p</option>
-              </Form.Select>
-              <Form.Select
-                aria-label="Codec"
-                className="my-1"
-                value={stateCtx.codec}
-                onChange={(evt) => {
-                  mutationCtx.setCodec(evt.target.value)
-                }}
-                inputProps={{
-                  name: 'codec',
-                  id: 'codec'
-                }}
-              >
-                <option>Open this select menu</option>
-                <option value="h264">h264</option>
-                <option value="vp8">vp8</option>
-              </Form.Select>
-              <Form.Select
-                aria-label="Camara"
-                className="my-1"
-                value={stateCtx.config.cameraId}
-                onChange={(evt) => {
-                  mutationCtx.updateConfig({
-                    cameraId: evt.target.value
-                  })
-                }}
-                inputProps={{
-                  name: 'camera',
-                  id: 'camera'
-                }}
-              >
-                <option>Open this select menu</option>
-                {cameraList.map((item, key) => (
-                  <option key={key} value={item.value}>{item.label}</option>
-                ))}
-              </Form.Select>
-              <Form.Select
-                aria-label="Microfono"
-                className="my-1"
-                value={stateCtx.config.microphoneId}
-                onChange={(evt) => {
-                  mutationCtx.updateConfig({
-                    microphoneId: evt.target.value
-                  })
-                }}
-                inputProps={{
-                  name: 'microphone',
-                  id: 'microphone'
-                }}
-              >
-                <option>Open this select menu</option>
-                {microphoneList.map((item, key) => (
-                  <option key={key} value={item.value}>{item.label}</option>
-                ))}
-              </Form.Select>
-              <Form.Check 
-                type="switch"
-                label="Video"
-                checked={stateCtx.muteVideo}
-                onChange={() => {
-                  mutationCtx.setVideo(!stateCtx.muteVideo)
-                }}
-                value={stateCtx.muteVideo}
-                color="primary"
-              />
-              <Form.Check 
-                type="switch"
-                label="Audio"
-                checked={stateCtx.muteAudio}
-                onChange={() => {
-                  mutationCtx.setAudio(!stateCtx.muteAudio)
-                }}
-                value={stateCtx.muteAudio}
-                color="primary"
-              />
-              <Form.Check 
-                type="switch"
-                label="Perfil"
-                checked={stateCtx.profile}
-                onChange={() => {
-                  mutationCtx.setProfile(!stateCtx.profile)
-                }}
-                value={stateCtx.profile}
-                color="primary"
-              />
-              <Button variant="primary">
-                Guardar
-              </Button>
-            </Form>
+              <h1>Token demo</h1>
+              <Form>
+                <Form.Group className="mb-3">
+                  <Form.Label className="text-white mx-4"><b>Ingresa el nombre del canal</b></Form.Label>
+                  <Form.Control style={{borderRadius: '20px'}} type="email" onChange={(evt) => setChannel(evt.target.value)}/>
+                </Form.Group>
+                <Button variant="dark" style={{borderRadius: '20px', width: '40%'}} onClick={setChannel_}>
+                  Crear Canal
+                </Button>
+              </Form>
           </Card>
         </Col>
       </Row>
     </Container>
   )
 }
+
+export default Settings;

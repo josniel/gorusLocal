@@ -8,6 +8,7 @@ import React, {
 import { reducer, defaultState } from './store'
 import CustomizedSnackbar from '../utils/snackbar-wrapper'
 import Loading from '../utils/loading'
+import api from './axios'
 
 const StateContext = createContext({})
 const MutationContext = createContext({})
@@ -114,6 +115,17 @@ export const ContainerProvider = ({ children }) => {
     //   dispatch({type: 'enableBeauty', enable});
     // }
   }
+  var token = ''
+  const getData = async () => {
+    await api.get('indexChannel').then(res => {
+      if (res) {
+          return res.token
+      }
+    });
+  }
+  /* useEffect(() => {
+    getData()
+  },[]) */
 
   useEffect(() => {
     window.sessionStorage.setItem(
@@ -122,7 +134,7 @@ export const ContainerProvider = ({ children }) => {
         uid: state.config.uid,
         host: state.config.host,
         channelName: state.config.channelName,
-        token: state.config.token,
+        // token: state.config.token,
         resolution: state.config.resolution
       })
     )
